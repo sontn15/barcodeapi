@@ -20,4 +20,8 @@ public interface BarcodeService {
 
     List<Barcode> findAllBarCodesInStore(Long storeId);
 
+    Result checkDataIsChange(Long storeId);
+
+    Result updateMarkDataChange(Long storeId, Boolean status);
+
 }

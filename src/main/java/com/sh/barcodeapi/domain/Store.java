@@ -34,4 +34,7 @@ public class Store implements Serializable {
     private Long quantityDevice;
 
     private String serialDevice;
+
+    private Boolean changeData;
+
 }

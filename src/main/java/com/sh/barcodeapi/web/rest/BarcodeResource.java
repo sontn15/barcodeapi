@@ -44,4 +44,13 @@ public interface BarcodeResource {
     @GetMapping("/stores/{storeId}/barcodes")
     List<Barcode> findAllBarCodes(@PathVariable(value = "storeId") @NotNull Long storeId);
 
+    @ApiOperation("Check store have update data?")
+    @GetMapping("/stores/{storeId}/data")
+    Result checkDataIsChange(@PathVariable(value = "storeId") @NotNull Long storeId);
+
+    @ApiOperation("Update status of data in store")
+    @PutMapping("/stores/{storeId}/data")
+    Result updateMarkDataChange(@PathVariable(value = "storeId") @NotNull Long storeId,
+                                @RequestParam(value = "status") @NotNull Boolean status);
+
 }

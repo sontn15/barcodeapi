@@ -192,6 +192,36 @@ public class BarcodeServiceImpl implements BarcodeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public Result checkDataIsChange(Long storeId) {
+        StoreEntity storeEntity = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResponseException(
+                        NotFoundError.STORE_NOT_FOUND.getMessage(), NotFoundError.STORE_NOT_FOUND));
+
+        String result = "false";
+        if (storeEntity.getChangeData()) {
+            result = "true";
+        }
+        return Result.builder()
+                .result(result)
+                .value(1L)
+                .build();
+    }
+
+    @Override
+    public Result updateMarkDataChange(Long storeId, Boolean status) {
+        StoreEntity storeEntity = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ResponseException(
+                        NotFoundError.STORE_NOT_FOUND.getMessage(), NotFoundError.STORE_NOT_FOUND));
+        storeEntity.setChangeData(status);
+        storeRepository.save(storeEntity);
+
+        return Result.builder()
+                .result("Successfully!")
+                .value(1L)
+                .build();
+    }
+
     private boolean checkDeviceAvailableInStore(StoreEntity storeEntity, String serialNumber) {
         boolean isCheck = false;
         String newSerialNumber;

@@ -56,4 +56,14 @@ public class BarcodeResourceImpl implements BarcodeResource {
         return service.findAllBarCodesInStore(storeId);
     }
 
+    @Override
+    public Result checkDataIsChange(Long storeId) {
+        return service.checkDataIsChange(storeId);
+    }
+
+    @Override
+    public Result updateMarkDataChange(Long storeId, Boolean status) {
+        return service.updateMarkDataChange(storeId, status);
+    }
+
 }

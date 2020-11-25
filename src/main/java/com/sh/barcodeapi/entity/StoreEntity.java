@@ -48,4 +48,7 @@ public class StoreEntity implements Serializable {
     @Column(name = "SERIAL_NUMBER")
     private String serialDevice;
 
+    @Column(name = "CHANGE_DATA")
+    private Boolean changeData;
+
 }
