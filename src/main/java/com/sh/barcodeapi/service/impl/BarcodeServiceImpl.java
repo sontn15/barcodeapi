@@ -92,10 +92,17 @@ public class BarcodeServiceImpl implements BarcodeService {
                 .map(unitEntityMapper::toDomain)
                 .collect(Collectors.toMap(Unit::getId, obj -> obj));
 
-        Unit unitDefault = null;
+        Unit unitDefault;
         Optional<UnitEntity> unitOptional = unitRepository.findByStoreIdAndNameIgnoreCaseAndStatus(storeId, "Chiếc", true);
         if (unitOptional.isPresent()) {
             unitDefault = unitEntityMapper.toDomain(unitOptional.get());
+        } else {
+            unitDefault = Unit.builder()
+                    .id(100L)
+                    .status(true)
+                    .name("Chiếc")
+                    .storeId(storeId)
+                    .build();
         }
         Unit finalUnitDefault = unitDefault;
 
@@ -107,7 +114,7 @@ public class BarcodeServiceImpl implements BarcodeService {
                     if (item.getUnitMin() != null) {
                         item.setUnitMinObj(mapUnits.get(item.getUnitMin()));
                     }
-                    if (item.getUnitDefault() != null) {
+                    if (item.getUnitDefault() != null && item.getUnitDefault() != 0L) {
                         item.setUnitDefaultObj(mapUnits.get(item.getUnitDefault()));
                     } else {
                         if (item.getUnitMin() != null) {
