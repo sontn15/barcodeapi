@@ -12,9 +12,9 @@ public interface BarcodeService {
 
     Store login(Store store);
 
-    List<Item> findAllItemsByStoreCode(String storeCode);
+    List<Item> findAllItemsInStore(Long storeId);
 
-    Item findItemByStoreAndBarcode(String storeCode, String barcode);
+    Item findItemByStoreAndBarcode(Long storeId, String barcode);
 
     Bill createOrUpdateBill(BillRequest request);
 

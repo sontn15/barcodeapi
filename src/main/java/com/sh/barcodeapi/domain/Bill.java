@@ -18,24 +18,16 @@ public class Bill {
 
     private Long id;
 
-    private String customerName;
-
-    private String customerAddress;
-
     private Long totalMoney;
 
     private String day;
 
     private Date createdDate;
 
-    private String description;
-
     private boolean status;
 
     private Long storeId;
 
     private List<SubBill> lstSubBills;
-
-    private Long statusBillDesktop;
 
 }

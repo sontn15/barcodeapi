@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tblSubPhieu")
+@Table(name = "tblSubCT")
 @Data
 @Builder
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class SubBillEntity implements Serializable {
     private String itemName;
 
     @OneToOne
-    @JoinColumn(name = "DVT", referencedColumnName = "MaDVT")
+    @JoinColumn(name = "DVT", referencedColumnName = "IdDVT")
     private UnitEntity unit;
 
     @Column(name = "SL")
@@ -43,12 +43,6 @@ public class SubBillEntity implements Serializable {
 
     @Column(name = "TTien")
     private Long totalMoney;
-
-    @Column(name = "TyLeCK")
-    private String tyLeCK;
-
-    @Column(name = "TTienCK")
-    private Long tongTienCK;
 
     @Column(name = "DVT_B")
     private Long unitCoSo;

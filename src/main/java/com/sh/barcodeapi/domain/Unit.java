@@ -14,10 +14,9 @@ import lombok.NoArgsConstructor;
 public class Unit {
 
     private Long id;
-    private Long maUnit;
     private String name;
     private String note;
-    private boolean status;
     private Long storeId;
+    private boolean status;
 
 }

@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Table(name = "tblPhieu")
+@Table(name = "tblCTChung")
 @Data
 @Builder
 @AllArgsConstructor
@@ -23,12 +23,6 @@ public class BillEntity implements Serializable {
     @Column(name = "STT_REC", nullable = false)
     private Long id;
 
-    @Column(name = "Ten_KH")
-    private String customerName;
-
-    @Column(name = "DiaChi")
-    private String customerAddress;
-
     @Column(name = "TG_TIEN")
     private Long totalMoney;
 
@@ -38,18 +32,13 @@ public class BillEntity implements Serializable {
     @Column(name = "GIO")
     private Date createdDate;
 
-    @Column(name = "DienGiai")
-    private String description;
-
     @Column(name = "STATUS")
     private boolean status;
 
-    @Column(name = "Ma_CH", nullable = false)
+    @Column(name = "IdCH", nullable = false)
     private Long storeId;
 
     @OneToMany(mappedBy = "bill", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<SubBillEntity> lstSubBills;
 
-    @Column(name = "TrangThai", nullable = false)
-    private Long statusBillDesktop;
 }

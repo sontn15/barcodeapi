@@ -5,6 +5,7 @@ import com.sh.barcodeapi.domain.Item;
 import com.sh.barcodeapi.domain.Store;
 import com.sh.barcodeapi.domain.Unit;
 import com.sh.barcodeapi.entity.BillEntity;
+import com.sh.barcodeapi.entity.ItemEntity;
 import com.sh.barcodeapi.entity.StoreEntity;
 import com.sh.barcodeapi.entity.SubBillEntity;
 import com.sh.barcodeapi.exception.BadRequestError;
@@ -70,7 +71,6 @@ public class BarcodeServiceImpl implements BarcodeService {
         StoreEntity storeEntity = storeRepository.findByUsernameAndPassword(store.getUsername().trim(), store.getPassword().trim())
                 .orElseThrow(() -> new ResponseException(
                         NotFoundError.STORE_NOT_FOUND.getMessage(), NotFoundError.STORE_NOT_FOUND));
-
         boolean isCheck = checkDeviceAvailableInStore(storeEntity, store.getSerialDevice());
         if (!isCheck) {
             throw new ResponseException(
@@ -80,17 +80,17 @@ public class BarcodeServiceImpl implements BarcodeService {
     }
 
     @Override
-    public List<Item> findAllItemsByStoreCode(String storeCode) {
+    public List<Item> findAllItemsInStore(Long storeId) {
         Sort mSort = Sort.by(Sort.Order.asc("name").nullsLast());
 
-        StoreEntity storeEntity = storeRepository.findByCode(storeCode)
+        StoreEntity storeEntity = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(
                         NotFoundError.STORE_NOT_FOUND.getMessage(), NotFoundError.STORE_NOT_FOUND));
 
         Map<Long, Unit> mapUnits = unitRepository.findAllByStoreId(storeEntity.getId())
                 .stream()
                 .map(unitEntityMapper::toDomain)
-                .collect(Collectors.toMap(Unit::getMaUnit, obj -> obj));
+                .collect(Collectors.toMap(Unit::getId, obj -> obj));
         return itemRepository.findAllByStoreId(storeEntity.getId(), mSort)
                 .stream()
                 .filter(Objects::nonNull)
@@ -121,11 +121,16 @@ public class BarcodeServiceImpl implements BarcodeService {
     }
 
     @Override
-    public Item findItemByStoreAndBarcode(String storeCode, String barcode) {
-        return itemRepository.findByStoreAndBarcode(storeCode, barcode)
+    public Item findItemByStoreAndBarcode(Long storeId, String barcode) {
+        Optional<ItemEntity> optional = itemRepository.findByStoreAndBarcode(storeId, barcode);
+        if (optional.isPresent()) {
+            return itemEntityMapper.toDomain(optional.get());
+        }
+        return itemRepository.findByStoreAndBarcodeSub(storeId, barcode)
                 .map(itemEntityMapper::toDomain)
                 .orElseThrow(() -> new ResponseException(
-                        NotFoundError.ITEM_NOT_FOUND.getMessage(), NotFoundError.ITEM_NOT_FOUND));
+                        NotFoundError.ITEM_NOT_FOUND.getMessage(), NotFoundError.ITEM_NOT_FOUND)
+                );
     }
 
     @Override
@@ -143,7 +148,6 @@ public class BarcodeServiceImpl implements BarcodeService {
         billEntity.setStatus(true);
         billEntity.setCreatedDate(new Date());
         billEntity.setDay(DateUtils.getCurrentDateStr());
-        billEntity.setStatusBillDesktop(request.getStatusBillDesktop());
         BillEntity billInsert = billRepository.save(billEntity);
 
         List<SubBillEntity> listSubBillEntity = subBillEntityMapper.toEntity(request.getLstSubBills());
@@ -158,18 +162,20 @@ public class BarcodeServiceImpl implements BarcodeService {
 
     private boolean checkDeviceAvailableInStore(StoreEntity storeEntity, String serialNumber) {
         boolean isCheck = false;
-        if (storeEntity.getQuantityDevice() > 0) {
-            List<String> arrSerials = Arrays.asList(storeEntity.getSerialDevice().split(","));
-            if (arrSerials.contains(serialNumber)) {
-                isCheck = true;
-            } else if (!arrSerials.contains(serialNumber) && storeEntity.getQuantityDevice() > arrSerials.size()) {
-                String newSerialNumber = storeEntity.getSerialDevice() + "," + serialNumber;
-                storeEntity.setSerialDevice(newSerialNumber);
-                storeRepository.save(storeEntity);
-                isCheck = true;
-            } else {
-                isCheck = false;
-            }
+        String newSerialNumber;
+        List<String> arrSerials = new ArrayList<>();
+        if (storeEntity.getSerialDevice() != null && !storeEntity.getSerialDevice().isEmpty()) {
+            arrSerials.addAll(Arrays.asList(storeEntity.getSerialDevice().split(",")));
+            newSerialNumber = storeEntity.getSerialDevice() + "," + serialNumber;
+        } else {
+            newSerialNumber = serialNumber;
+        }
+        if (arrSerials.size() > 0 && arrSerials.contains(serialNumber)) {
+            isCheck = true;
+        } else if (!arrSerials.contains(serialNumber) && storeEntity.getQuantityDevice() > arrSerials.size()) {
+            storeEntity.setSerialDevice(newSerialNumber);
+            storeRepository.save(storeEntity);
+            isCheck = true;
         }
         return isCheck;
     }

@@ -21,9 +21,6 @@ public class UnitEntity implements Serializable {
     @Column(name = "IdDVT", nullable = false)
     private Long id;
 
-    @Column(name = "MaDVT", nullable = false)
-    private Long maUnit;
-
     @Column(name = "DVT", nullable = false)
     private String name;
 
@@ -33,7 +30,7 @@ public class UnitEntity implements Serializable {
     @Column(name = "Active", nullable = false)
     private boolean status;
 
-    @Column(name = "Ma_CH", nullable = false)
+    @Column(name = "IdCH", nullable = false)
     private Long storeId;
 
 }

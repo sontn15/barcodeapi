@@ -21,13 +21,7 @@ public class Item {
 
     private String barcode;
 
-    private Long giaNhap;
-
-    private Long giaBanLe;
-
-    private Long giaBuon;
-
-    private Long giaDaiLy;
+    private Long giaBan;
 
     private Long unitMin;
     private Unit unitMinObj;
@@ -46,6 +40,4 @@ public class Item {
     private Long giaQuyDoi2;
 
     private boolean status;
-
-    private Store store;
 }

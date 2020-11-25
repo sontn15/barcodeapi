@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tblSanPham")
+@Table(name = "tblDMSP")
 @Data
 @Builder
 @AllArgsConstructor
@@ -30,17 +30,8 @@ public class ItemEntity implements Serializable {
     @Column(name = "BARCODE")
     private String barcode;
 
-    @Column(name = "GiaNhap")
-    private Long giaNhap;
-
-    @Column(name = "GiaBanLe")
-    private Long giaBanLe;
-
-    @Column(name = "GiaBuon")
-    private Long giaBuon;
-
-    @Column(name = "GiaDaiLy")
-    private Long giaDaiLy;
+    @Column(name = "GiaBan")
+    private Long giaBan;
 
     @Column(name = "DVT")
     private Long unitMin;
@@ -51,20 +42,20 @@ public class ItemEntity implements Serializable {
     private Long unit1;
     @Column(name = "QuyCach1")
     private Long quyCach1;
-    @Column(name = "GiaQD1")
+    @Column(name = "GiaQuyDoi1")
     private Long giaQuyDoi1;
 
     @Column(name = "DVT2")
     private Long unit2;
     @Column(name = "QuyCach2")
     private Long quyCach2;
-    @Column(name = "GiaQD2")
+    @Column(name = "GiaQuyDoi2")
     private Long giaQuyDoi2;
 
     @Column(name = "Active", nullable = false)
     private boolean status;
 
     @ManyToOne
-    @JoinColumn(name = "Ma_CH", referencedColumnName = "MA_CH")
+    @JoinColumn(name = "IdCH", referencedColumnName = "MA_CH")
     private StoreEntity store;
 }

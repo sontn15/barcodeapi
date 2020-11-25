@@ -34,13 +34,13 @@ public class BarcodeResourceImpl implements BarcodeResource {
     }
 
     @Override
-    public List<Item> findAllItems(String storeCode) {
-        return service.findAllItemsByStoreCode(storeCode);
+    public List<Item> findAllItems(Long storeId) {
+        return service.findAllItemsInStore(storeId);
     }
 
     @Override
-    public Item getItemByBarcode(String storeCode, String barcode) {
-        return service.findItemByStoreAndBarcode(storeCode, barcode);
+    public Item getItemByBarcodeOfStore(Long storeId, String barcode) {
+        return service.findItemByStoreAndBarcode(storeId, barcode);
     }
 
     @Override

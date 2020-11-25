@@ -19,19 +19,12 @@ public class BillRequest {
 
     private Long id;
 
-    private String customerName;
-
-    private String customerAddress;
-
     private Long totalMoney;
 
     private String description;
 
     @NotNull(message = "storeId is not null")
     private Long storeId;
-
-    @NotNull(message = "statusBillDesktop is not null")
-    private Long statusBillDesktop;
 
     @NotNull(message = "lstSubBills is not null")
     private List<SubBill> lstSubBills;

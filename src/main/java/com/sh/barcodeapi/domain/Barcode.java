@@ -10,25 +10,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel("SubBill Model Domain")
-public class SubBill {
+@ApiModel("Barcode Model Domain")
+public class Barcode {
 
     private Long id;
-
-    private Item item;
-
-    private String itemName;
-
-    private Unit unit;
-
-    private Double quantity;
-
+    private Long storeId;
+    private String itemCode;
+    private String barcode;
+    private Long quantity;
     private Long price;
-
-    private Long totalMoney;
-
-    private Long unitCoSo;
-
-    private Long heSoCoSo;
 
 }
