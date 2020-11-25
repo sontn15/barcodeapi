@@ -18,7 +18,7 @@ public class BarcodeEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "IdDVT", nullable = false)
+    @Column(name = "Id", nullable = false)
     private Long id;
 
     @Column(name = "IdCH", nullable = false)

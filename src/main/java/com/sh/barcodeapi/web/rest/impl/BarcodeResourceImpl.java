@@ -1,8 +1,6 @@
 package com.sh.barcodeapi.web.rest.impl;
 
-import com.sh.barcodeapi.domain.Bill;
-import com.sh.barcodeapi.domain.Item;
-import com.sh.barcodeapi.domain.Store;
+import com.sh.barcodeapi.domain.*;
 import com.sh.barcodeapi.service.BarcodeService;
 import com.sh.barcodeapi.web.rest.BarcodeResource;
 import com.sh.barcodeapi.web.rest.request.BillRequest;
@@ -46,6 +44,16 @@ public class BarcodeResourceImpl implements BarcodeResource {
     @Override
     public Bill createOrUpdateBill(BillRequest request) {
         return service.createOrUpdateBill(request);
+    }
+
+    @Override
+    public List<Unit> findAllUnits(Long storeId) {
+        return service.findAllUnitsInStore(storeId);
+    }
+
+    @Override
+    public List<Barcode> findAllBarCodes(Long storeId) {
+        return service.findAllBarCodesInStore(storeId);
     }
 
 }

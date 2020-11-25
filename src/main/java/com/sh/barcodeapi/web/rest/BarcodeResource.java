@@ -1,8 +1,6 @@
 package com.sh.barcodeapi.web.rest;
 
-import com.sh.barcodeapi.domain.Bill;
-import com.sh.barcodeapi.domain.Item;
-import com.sh.barcodeapi.domain.Store;
+import com.sh.barcodeapi.domain.*;
 import com.sh.barcodeapi.web.rest.request.BillRequest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,7 +33,15 @@ public interface BarcodeResource {
                                  @PathVariable(value = "barcode") @NotBlank String barcode);
 
     @ApiOperation("Create bill")
-    @PostMapping("/stores/customers/bills")
+    @PostMapping("/stores/bills")
     Bill createOrUpdateBill(@RequestBody @Valid BillRequest request);
+
+    @ApiOperation("Get all units of store")
+    @GetMapping("/stores/{storeId}/units")
+    List<Unit> findAllUnits(@PathVariable(value = "storeId") @NotNull Long storeId);
+
+    @ApiOperation("Get all barcodes of store")
+    @GetMapping("/stores/{storeId}/barcodes")
+    List<Barcode> findAllBarCodes(@PathVariable(value = "storeId") @NotNull Long storeId);
 
 }

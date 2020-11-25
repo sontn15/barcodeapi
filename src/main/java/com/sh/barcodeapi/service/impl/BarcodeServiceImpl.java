@@ -1,9 +1,6 @@
 package com.sh.barcodeapi.service.impl;
 
-import com.sh.barcodeapi.domain.Bill;
-import com.sh.barcodeapi.domain.Item;
-import com.sh.barcodeapi.domain.Store;
-import com.sh.barcodeapi.domain.Unit;
+import com.sh.barcodeapi.domain.*;
 import com.sh.barcodeapi.entity.BillEntity;
 import com.sh.barcodeapi.entity.ItemEntity;
 import com.sh.barcodeapi.entity.StoreEntity;
@@ -33,6 +30,7 @@ public class BarcodeServiceImpl implements BarcodeService {
     private final ItemRepository itemRepository;
     private final BillRepository billRepository;
     private final SubBillRepository subBillRepository;
+    private final BarcodeRepository barcodeRepository;
 
     private final StoreEntityMapper storeEntityMapper;
     private final UnitEntityMapper unitEntityMapper;
@@ -40,6 +38,8 @@ public class BarcodeServiceImpl implements BarcodeService {
     private final BillEntityMapper billEntityMapper;
     private final BillCreateMapper billCreateMapper;
     private final SubBillEntityMapper subBillEntityMapper;
+    private final BarcodeEntityMapper barcodeEntityMapper;
+
 
     @Autowired
     public BarcodeServiceImpl(StoreRepository storeRepository,
@@ -47,23 +47,27 @@ public class BarcodeServiceImpl implements BarcodeService {
                               ItemRepository itemRepository,
                               BillRepository billRepository,
                               SubBillRepository subBillRepository,
+                              BarcodeRepository barcodeRepository,
                               StoreEntityMapper storeEntityMapper,
                               UnitEntityMapper unitEntityMapper,
                               ItemEntityMapper itemEntityMapper,
                               BillEntityMapper billEntityMapper,
                               BillCreateMapper billCreateMapper,
-                              SubBillEntityMapper subBillEntityMapper) {
+                              SubBillEntityMapper subBillEntityMapper,
+                              BarcodeEntityMapper barcodeEntityMapper) {
         this.storeRepository = storeRepository;
         this.unitRepository = unitRepository;
         this.itemRepository = itemRepository;
         this.billRepository = billRepository;
         this.subBillRepository = subBillRepository;
+        this.barcodeRepository = barcodeRepository;
         this.storeEntityMapper = storeEntityMapper;
         this.unitEntityMapper = unitEntityMapper;
         this.itemEntityMapper = itemEntityMapper;
         this.billEntityMapper = billEntityMapper;
         this.billCreateMapper = billCreateMapper;
         this.subBillEntityMapper = subBillEntityMapper;
+        this.barcodeEntityMapper = barcodeEntityMapper;
     }
 
     @Override
@@ -159,6 +163,21 @@ public class BarcodeServiceImpl implements BarcodeService {
         return billEntityMapper.toDomain(billInsert);
     }
 
+    @Override
+    public List<Unit> findAllUnitsInStore(Long storeId) {
+        return unitRepository.findAllByStoreId(storeId)
+                .stream()
+                .map(unitEntityMapper::toDomain)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Barcode> findAllBarCodesInStore(Long storeId) {
+        return barcodeRepository.findAllByStoreId(storeId)
+                .stream()
+                .map(barcodeEntityMapper::toDomain)
+                .collect(Collectors.toList());
+    }
 
     private boolean checkDeviceAvailableInStore(StoreEntity storeEntity, String serialNumber) {
         boolean isCheck = false;
