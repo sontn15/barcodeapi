@@ -1,10 +1,7 @@
 package com.sh.barcodeapi.service.impl;
 
 import com.sh.barcodeapi.domain.*;
-import com.sh.barcodeapi.entity.BillEntity;
-import com.sh.barcodeapi.entity.ItemEntity;
-import com.sh.barcodeapi.entity.StoreEntity;
-import com.sh.barcodeapi.entity.SubBillEntity;
+import com.sh.barcodeapi.entity.*;
 import com.sh.barcodeapi.exception.BadRequestError;
 import com.sh.barcodeapi.exception.NotFoundError;
 import com.sh.barcodeapi.exception.ResponseException;
@@ -90,11 +87,18 @@ public class BarcodeServiceImpl implements BarcodeService {
         StoreEntity storeEntity = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ResponseException(
                         NotFoundError.STORE_NOT_FOUND.getMessage(), NotFoundError.STORE_NOT_FOUND));
-
         Map<Long, Unit> mapUnits = unitRepository.findAllByStoreId(storeEntity.getId())
                 .stream()
                 .map(unitEntityMapper::toDomain)
                 .collect(Collectors.toMap(Unit::getId, obj -> obj));
+
+        Unit unitDefault = null;
+        Optional<UnitEntity> unitOptional = unitRepository.findByStoreIdAndNameIgnoreCaseAndStatus(storeId, "Chiếc", true);
+        if (unitOptional.isPresent()) {
+            unitDefault = unitEntityMapper.toDomain(unitOptional.get());
+        }
+        Unit finalUnitDefault = unitDefault;
+
         return itemRepository.findAllByStoreId(storeEntity.getId(), mSort)
                 .stream()
                 .filter(Objects::nonNull)
@@ -110,8 +114,10 @@ public class BarcodeServiceImpl implements BarcodeService {
                             item.setUnitDefaultObj(mapUnits.get(item.getUnitMin()));
                         } else if (item.getUnit1() != null) {
                             item.setUnitDefaultObj(mapUnits.get(item.getUnit1()));
-                        } else {
+                        } else if (item.getUnit2() != null) {
                             item.setUnitDefaultObj(mapUnits.get(item.getUnit2()));
+                        } else {
+                            item.setUnitDefaultObj(finalUnitDefault);
                         }
                     }
                     if (item.getUnit1() != null) {
